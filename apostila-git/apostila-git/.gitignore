@@ -1,0 +1,15 @@
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos temporários de QA / build (na raiz)
+/qa_*.png
+/slide-*.jpg
+/*.pdf
+
+# Dependências (caso adicione um gerador Node no futuro)
+node_modules/
+
+# Editores
+.vscode/
+.idea/

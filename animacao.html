@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animação — Fluxo do Git</title>
+<link rel="stylesheet" href="css/estilo.css">
+<style>
+  .palco {
+    max-width: 940px; margin: 0 auto; padding: 30px 20px 60px;
+  }
+  .cena {
+    background: var(--ink-2); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 30px 26px; margin-bottom: 22px;
+  }
+  .board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 10px 0 26px; }
+  .col {
+    background: #0c1a28; border: 2px solid var(--line); border-radius: 12px;
+    padding: 16px 12px; min-height: 210px; transition: .4s;
+  }
+  .col.active { border-color: var(--amber); box-shadow: 0 0 26px rgba(244,162,89,.25); }
+  .col h4 {
+    font-family: 'Space Grotesk', sans-serif; font-size: .82rem; margin: 0 0 4px;
+    text-align: center; color: var(--paper);
+  }
+  .col .lbl {
+    font-family: 'JetBrains Mono', monospace; font-size: .62rem;
+    text-align: center; color: var(--muted-2); margin-bottom: 12px;
+    text-transform: uppercase; letter-spacing: .06em;
+  }
+  .col.work { border-top: 3px solid #6fb1e0; }
+  .col.stage { border-top: 3px solid #f4a259; }
+  .col.repo { border-top: 3px solid #4cc9b0; }
+  .col.cloud { border-top: 3px solid #f6bd60; }
+
+  .arq {
+    font-family: 'JetBrains Mono', monospace; font-size: .74rem;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 7px;
+    padding: 7px 9px; margin: 7px 0; display: flex; align-items: center; gap: 7px;
+    opacity: 0; transform: translateY(8px); transition: .4s;
+  }
+  .arq.show { opacity: 1; transform: none; }
+  .arq .st { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto; }
+  .st.mod { background: #6fb1e0; } .st.stg { background: #f4a259; } .st.com { background: #4cc9b0; }
+
+  .commit-dot {
+    width: 34px; height: 34px; border-radius: 50%; background: var(--teal);
+    color: var(--ink); display: grid; place-items: center; margin: 8px auto;
+    font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: .7rem;
+    opacity: 0; transform: scale(.4); transition: .5s;
+  }
+  .commit-dot.show { opacity: 1; transform: scale(1); }
+
+  .cloud-icon {
+    font-size: 2.4rem; text-align: center; margin: 20px 0;
+    opacity: .25; transition: .6s;
+  }
+  .cloud-icon.show { opacity: 1; text-shadow: 0 0 24px rgba(246,189,96,.6); }
+
+  .console {
+    background: #071019; border: 1px solid var(--line); border-radius: 10px;
+    font-family: 'JetBrains Mono', monospace; font-size: .9rem;
+    padding: 16px 18px; min-height: 58px; margin-top: 6px;
+  }
+  .console .linha { color: var(--paper); }
+  .console .linha::before { content: "$ "; color: var(--teal); }
+  .console .desc { color: var(--muted); font-size: .82rem; margin-top: 8px; }
+
+  .controles { display: flex; align-items: center; gap: 12px; justify-content: center; margin-top: 22px; flex-wrap: wrap; }
+  .btn {
+    font-family: 'JetBrains Mono', monospace; font-size: .82rem; cursor: pointer;
+    padding: 11px 20px; border-radius: 9px; border: 1px solid var(--line);
+    background: var(--panel); color: var(--paper); transition: .2s;
+  }
+  .btn:hover { border-color: var(--amber); color: var(--amber); }
+  .btn.primary { background: var(--amber); color: var(--ink); border-color: var(--amber); font-weight: 700; }
+  .btn.primary:hover { background: var(--amber-2); color: var(--ink); }
+  .steps-ind { display: flex; gap: 8px; justify-content: center; margin: 8px 0 0; }
+  .steps-ind i {
+    width: 30px; height: 5px; border-radius: 3px; background: var(--line); transition: .3s;
+  }
+  .steps-ind i.done { background: var(--teal); }
+  .steps-ind i.cur { background: var(--amber); }
+
+  @media (max-width: 720px){ .board { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+  <span class="titulo"><b>animação</b>/fluxo-git.run</span>
+  <nav>
+    <a href="index.html">← Apostila</a>
+    <a href="slides.html">Slides</a>
+  </nav>
+</header>
+
+<section class="hero" style="padding-bottom:10px">
+  <div class="eyebrow">Modo interativo</div>
+  <h1 style="font-size:clamp(1.9rem,5vw,3rem)">O fluxo do Git, <span class="grad">animado</span></h1>
+  <p class="sub">Acompanhe um arquivo viajar pelas Três Árvores — do seu editor até a nuvem — comando a comando.</p>
+</section>
+
+<div class="palco">
+  <div class="cena">
+    <div class="board">
+      <div class="col work active" id="col-work">
+        <h4>Working Directory</h4><div class="lbl">seu editor</div>
+        <div class="arq" id="a1"><span class="st mod"></span>index.html</div>
+        <div class="arq" id="a2"><span class="st mod"></span>estilo.css</div>
+        <div class="arq" id="a3"><span class="st mod"></span>README.md</div>
+      </div>
+      <div class="col stage" id="col-stage">
+        <h4>Staging Area</h4><div class="lbl">preparação</div>
+        <div class="arq" id="s1"><span class="st stg"></span>index.html</div>
+        <div class="arq" id="s2"><span class="st stg"></span>estilo.css</div>
+        <div class="arq" id="s3"><span class="st stg"></span>README.md</div>
+      </div>
+      <div class="col repo" id="col-repo">
+        <h4>HEAD · Repositório</h4><div class="lbl">histórico local</div>
+        <div class="commit-dot" id="c1">c1</div>
+      </div>
+      <div class="col cloud" id="col-cloud">
+        <h4>GitHub</h4><div class="lbl">nuvem remota</div>
+        <div class="cloud-icon" id="cloud">☁</div>
+      </div>
+    </div>
+
+    <div class="console">
+      <div class="linha" id="cmd">git init</div>
+      <div class="desc" id="desc">Inicializa o repositório: a pasta .git começa a monitorar o projeto.</div>
+    </div>
+
+    <div class="steps-ind" id="ind"></div>
+
+    <div class="controles">
+      <button class="btn" id="reset">↺ Reiniciar</button>
+      <button class="btn primary" id="next">Próximo passo ▶</button>
+      <button class="btn" id="auto">▶ Reproduzir tudo</button>
+    </div>
+  </div>
+
+  <p style="text-align:center;color:var(--muted-2);font-family:'JetBrains Mono',monospace;font-size:.78rem">
+    Passo <b id="pnum" style="color:var(--amber)">1</b> de 6 —
+    <a href="index.html" style="color:var(--teal)">voltar à apostila</a>
+  </p>
+</div>
+
+<script>
+const passos = [
+  { cmd: "git init",
+    desc: "Inicializa o repositório: a pasta .git começa a monitorar o projeto.",
+    active: "work", run(){ } },
+  { cmd: "git status",
+    desc: "O Git detecta 3 arquivos modificados (em azul) ainda não preparados.",
+    active: "work", run(){ ['a1','a2','a3'].forEach(id=>show(id)); } },
+  { cmd: "git add .",
+    desc: "Todas as alterações vão para a Área de Preparação (agora em laranja).",
+    active: "stage", run(){ ['s1','s2','s3'].forEach(id=>show(id)); } },
+  { cmd: 'git commit -m "primeira versão"',
+    desc: "As alterações preparadas viram um commit: uma foto salva no histórico (c1).",
+    active: "repo", run(){ show('c1'); } },
+  { cmd: "git log",
+    desc: "A linha do tempo mostra o commit c1 registrado no repositório local.",
+    active: "repo", run(){ } },
+  { cmd: "git push -u origin main",
+    desc: "O commit é enviado para o GitHub. Projeto sincronizado com a nuvem! 🚀",
+    active: "cloud", run(){ document.getElementById('cloud').classList.add('show'); } },
+];
+
+let i = 0, timer = null;
+const $ = id => document.getElementById(id);
+function show(id){ $(id).classList.add('show'); }
+
+// indicadores
+const ind = $('ind');
+passos.forEach(()=>ind.appendChild(document.createElement('i')));
+
+function render(){
+  // limpa colunas ativas
+  ['col-work','col-stage','col-repo','col-cloud'].forEach(c=>$(c).classList.remove('active'));
+  const p = passos[i];
+  $('col-'+p.active).classList.add('active');
+  $('cmd').textContent = p.cmd;
+  $('desc').textContent = p.desc;
+  $('pnum').textContent = i+1;
+  p.run();
+  [...ind.children].forEach((el,idx)=>{
+    el.className = idx < i ? 'done' : idx === i ? 'cur' : '';
+  });
+}
+
+function avancar(){
+  if (i < passos.length-1){ i++; render(); }
+  else { pausar(); }
+}
+function reiniciar(){
+  pausar(); i = 0;
+  ['a1','a2','a3','s1','s2','s3','c1'].forEach(id=>$(id).classList.remove('show'));
+  $('cloud').classList.remove('show');
+  render();
+}
+function reproduzir(){
+  reiniciar();
+  timer = setInterval(()=>{
+    if (i >= passos.length-1){ pausar(); return; }
+    avancar();
+  }, 1900);
+  $('auto').textContent = '⏸ Pausar';
+}
+function pausar(){
+  if(timer){ clearInterval(timer); timer=null; }
+  $('auto').textContent = '▶ Reproduzir tudo';
+}
+
+$('next').addEventListener('click', ()=>{ pausar(); avancar(); });
+$('reset').addEventListener('click', reiniciar);
+$('auto').addEventListener('click', ()=>{ timer ? pausar() : reproduzir(); });
+
+render();
+</script>
+</body>
+</html>

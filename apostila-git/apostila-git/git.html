@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Publicar no GitHub — Guia do repositório</title>
+<link rel="stylesheet" href="css/estilo.css">
+<style>
+  .guia { max-width: 820px; margin: 0 auto; padding: 20px 24px 90px; }
+  .cmd-card {
+    background: #071019; border: 1px solid var(--line); border-radius: 12px;
+    margin: 18px 0; overflow: hidden;
+  }
+  .cmd-card .head {
+    display: flex; align-items: center; gap: 10px; padding: 12px 16px;
+    border-bottom: 1px solid var(--line); background: #0c1a28;
+  }
+  .cmd-card .head .num {
+    width: 26px; height: 26px; border-radius: 50%; background: var(--amber);
+    color: var(--ink); font-family: 'JetBrains Mono', monospace; font-weight: 700;
+    font-size: .8rem; display: grid; place-items: center; flex: 0 0 auto;
+  }
+  .cmd-card .head h4 {
+    margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: .98rem; color: var(--paper);
+  }
+  .cmd-card .body { padding: 14px 16px; }
+  .cmd-card .body p { margin: 0 0 12px; font-size: .9rem; color: var(--muted); }
+  .cmd-row {
+    display: flex; align-items: center; gap: 10px; background: #0a141f;
+    border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
+  }
+  .cmd-row code {
+    flex: 1; font-family: 'JetBrains Mono', monospace; font-size: .86rem;
+    color: var(--paper); overflow-x: auto; white-space: nowrap;
+  }
+  .cmd-row code .fl { color: var(--amber-2); } .cmd-row code .st { color: var(--teal); }
+  .copiar {
+    font-family: 'JetBrains Mono', monospace; font-size: .72rem; cursor: pointer;
+    background: var(--panel); color: var(--muted); border: 1px solid var(--line);
+    border-radius: 6px; padding: 6px 10px; transition: .2s; flex: 0 0 auto;
+  }
+  .copiar:hover { border-color: var(--amber); color: var(--amber); }
+  .copiar.ok { background: var(--teal); color: var(--ink); border-color: var(--teal); }
+  .destaque { color: var(--amber-2); font-family: 'JetBrains Mono', monospace; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+  <span class="titulo"><b>guia</b>/publicar-no-github.sh</span>
+  <nav>
+    <a href="index.html">← Apostila</a>
+    <a href="animacao.html">Animação</a>
+    <a href="slides.html">Slides</a>
+  </nav>
+</header>
+
+<section class="hero" style="padding-bottom:6px">
+  <div class="eyebrow">Guia prático</div>
+  <h1 style="font-size:clamp(1.9rem,5vw,3rem)">Publique este projeto <span class="grad">no GitHub</span></h1>
+  <p class="sub">Siga os passos na ordem. Toque em <b>Copiar</b> em cada comando e cole no seu terminal (Git Bash no Windows).</p>
+</section>
+
+<div class="guia">
+
+  <div class="nota">
+    <span class="b">⚙️</span>
+    <p><strong>Antes de começar:</strong> confira se o Git está instalado com
+       <span class="destaque">git --version</span> e se você já configurou seu nome e e-mail
+       (veja a <a href="index.html#conta">seção 03 da apostila</a>).</p>
+  </div>
+
+  <div class="cmd-card">
+    <div class="head"><span class="num">1</span><h4>Inicializar o repositório</h4></div>
+    <div class="body">
+      <p>Cria a pasta oculta <span class="kw">.git</span> e começa a monitorar os arquivos.</p>
+      <div class="cmd-row"><code>git init</code><button class="copiar">Copiar</button></div>
+    </div>
+  </div>
+
+  <div class="cmd-card">
+    <div class="head"><span class="num">2</span><h4>Conferir o estado</h4></div>
+    <div class="body">
+      <p>Mostra os arquivos novos ou alterados que ainda não foram salvos.</p>
+      <div class="cmd-row"><code>git status</code><button class="copiar">Copiar</button></div>
+    </div>
+  </div>
+
+  <div class="cmd-card">
+    <div class="head"><span class="num">3</span><h4>Adicionar tudo à preparação</h4></div>
+    <div class="body">
+      <p>Coloca todas as modificações na <em>Staging Area</em>, prontas para o commit.</p>
+      <div class="cmd-row"><code>git add <span class="fl">.</span></code><button class="copiar">Copiar</button></div>
+    </div>
+  </div>
+
+  <div class="cmd-card">
+    <div class="head"><span class="num">4</span><h4>Salvar a primeira versão (commit)</h4></div>
+    <div class="body">
+      <p>Registra um <em>snapshot</em> com uma mensagem clara descrevendo a alteração.</p>
+      <div class="cmd-row"><code>git commit <span class="fl">-m</span> <span class="st">"Adiciona apostila de controle de versão"</span></code><button class="copiar">Copiar</button></div>
+    </div>
+  </div>
+
+  <div class="cmd-card">
+    <div class="head"><span class="num">5</span><h4>Definir a ramificação principal</h4></div>
+    <div class="body">
+      <p>Renomeia a branch atual para <span class="kw">main</span> — o padrão do GitHub.</p>
+      <div class="cmd-row"><code>git branch <span class="fl">-M</span> main</code><button class="copiar">Copiar</button></div>
+    </div>
+  </div>
+
+  <div class="cmd-card">
+    <div class="head"><span class="num">6</span><h4>Conectar ao repositório remoto</h4></div>
+    <div class="body">
+      <p>No GitHub, crie um repositório com <em>New</em>, copie a URL e cole no lugar de
+         <span class="destaque">SEU-USUARIO</span>.</p>
+      <div class="cmd-row"><code>git remote add origin https://github.com/<span class="fl">SEU-USUARIO</span>/apostila-git.git</code><button class="copiar">Copiar</button></div>
+    </div>
+  </div>
+
+  <div class="cmd-card">
+    <div class="head"><span class="num">7</span><h4>Enviar para a nuvem (push)</h4></div>
+    <div class="body">
+      <p>Publica seus arquivos e todo o histórico no GitHub. Autentique com <em>token</em> ou <em>SSH</em>.</p>
+      <div class="cmd-row"><code>git push <span class="fl">-u</span> origin main</code><button class="copiar">Copiar</button></div>
+    </div>
+  </div>
+
+  <div class="nota">
+    <span class="b">🚀</span>
+    <p><strong>Pronto!</strong> Atualize a página do seu repositório no GitHub — os arquivos estarão lá.
+       A cada nova mudança, repita apenas <span class="destaque">add → commit → push</span>.</p>
+  </div>
+
+  <h3 style="font-family:'Space Grotesk',sans-serif;color:var(--amber-2);margin-top:36px">Bônus · publicar como site (GitHub Pages)</h3>
+  <p style="color:#d7e2ee;font-size:.95rem">No repositório, vá em <span class="kw">Settings › Pages</span>,
+     escolha a branch <span class="kw">main</span> e salve. Em alguns instantes sua apostila fica no ar
+     num endereço público <span class="kw">https://seu-usuario.github.io/apostila-git/</span>.</p>
+
+</div>
+
+<footer>
+  <p><a href="index.html">🏠 Apostila</a> &nbsp;·&nbsp; <a href="animacao.html">🎬 Animação</a> &nbsp;·&nbsp; <a href="slides.html">📊 Slides</a></p>
+</footer>
+
+<script>
+document.querySelectorAll('.copiar').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const code = btn.previousElementSibling.innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      const antes = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      btn.classList.add('ok');
+      setTimeout(() => { btn.textContent = antes; btn.classList.remove('ok'); }, 1600);
+    });
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apostila — Controle de Versão, Git & GitHub</title>
+<meta name="description" content="Apostila detalhada sobre controle de versão, diferenças entre Git e GitHub, criação de conta, repositórios e o fluxo de trabalho das Três Árvores.">
+<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<div id="progresso"></div>
+
+<header class="topbar">
+  <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+  <span class="titulo"><b>apostila</b>/controle-de-versao.md</span>
+  <nav>
+    <a href="#intro">01 · Versão</a>
+    <a href="#gitgithub">02 · Git×GitHub</a>
+    <a href="#conta">03 · Conta</a>
+    <a href="#repo">04 · Repositório</a>
+    <a href="#fluxo">05 · Fluxo</a>
+    <a href="#nuvem">06 · GitHub</a>
+    <a href="slides.html">Slides ↗</a>
+    <a href="animacao.html">Animação ↗</a>
+  </nav>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div class="eyebrow">Aula · 06 / 08 / 2026</div>
+  <h1>Controle de Versão<br>com <span class="grad">Git &amp; GitHub</span></h1>
+  <p class="sub">Do primeiro <span class="kw">git init</span> ao <span class="kw">git push</span>: uma apostila
+     detalhada sobre como rastrear cada alteração do seu projeto e colaborar sem perder trabalho.</p>
+  <div class="meta">
+    <span>⏱ Leitura <b>~18 min</b></span>
+    <span>◆ Nível <b>Iniciante</b></span>
+    <span>⌨ <b>6 seções</b></span>
+    <span>🎞 <b>+ slides &amp; animação</b></span>
+  </div>
+  <div class="prompt">git log --oneline --graph<span class="cursor"></span></div>
+</section>
+
+<main class="wrap">
+
+  <!-- ============ 01 · CONTROLE DE VERSÃO ============ -->
+  <section class="secao reveal" id="intro">
+    <div class="marco"><span class="n">01</span><h2>O que é controle de versão?</h2></div>
+    <p>O <strong>controle de versão</strong> — conhecido pelas siglas <em>VCS</em> (Version Control System)
+       ou <em>SCM</em> (Source Control Management) — é um sistema que rastreia o histórico de alterações em
+       arquivos e coordena o trabalho de várias pessoas sobre eles. Na prática, ele registra
+       <strong>cada modificação de um projeto ao longo de uma linha do tempo</strong>.</p>
+
+    <figure class="fig">
+      <svg viewBox="0 0 760 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Linha do tempo de commits">
+        <defs>
+          <linearGradient id="railg" x1="0" x2="1">
+            <stop offset="0" stop-color="#f4a259"/><stop offset="1" stop-color="#4cc9b0"/>
+          </linearGradient>
+        </defs>
+        <line x1="60" y1="120" x2="700" y2="120" stroke="url(#railg)" stroke-width="4"/>
+        <!-- commits -->
+        <g font-family="'JetBrains Mono',monospace" font-size="12" fill="#9db4cc" text-anchor="middle">
+          <circle cx="120" cy="120" r="13" fill="#13263b" stroke="#f4a259" stroke-width="3"/>
+          <text x="120" y="124" fill="#f4a259" font-size="11">c1</text>
+          <text x="120" y="165">versão inicial</text>
+          <circle cx="290" cy="120" r="13" fill="#13263b" stroke="#f4a259" stroke-width="3"/>
+          <text x="290" y="124" fill="#f4a259" font-size="11">c2</text>
+          <text x="290" y="165">adiciona login</text>
+          <circle cx="460" cy="120" r="13" fill="#13263b" stroke="#f4a259" stroke-width="3"/>
+          <text x="460" y="124" fill="#f4a259" font-size="11">c3</text>
+          <text x="460" y="165">corrige bug</text>
+          <circle cx="630" cy="120" r="15" fill="#f4a259"/>
+          <text x="630" y="124" fill="#0d1b2a" font-size="11" font-weight="700">HEAD</text>
+          <text x="630" y="165" fill="#4cc9b0">versão atual</text>
+        </g>
+        <text x="60" y="45" font-family="'Space Grotesk',sans-serif" font-size="15" fill="#f5f1e8" font-weight="600">A linha do tempo do projeto</text>
+        <text x="60" y="68" font-family="Inter,sans-serif" font-size="12" fill="#6d87a3">cada ponto é um "snapshot" salvo — é possível voltar a qualquer um deles</text>
+      </svg>
+      <figcaption>Fig. 1 — Cada commit é uma fotografia do projeto num instante do tempo.</figcaption>
+    </figure>
+
+    <p>No desenvolvimento de software moderno, o controle de versão é considerado <strong>essencial</strong>.
+       Veja os cinco motivos principais:</p>
+
+    <h3>1 · Trabalho em equipe sem bloqueios</h3>
+    <p>Sem um VCS, quando várias pessoas editam o mesmo arquivo, o trabalho pode ser
+       <strong>sobrescrito</strong> (alguém perde o que fez) ou o arquivo fica <strong>bloqueado</strong>
+       para edição, travando a produtividade. O controle de versão deixa todos trabalharem em paralelo e
+       <strong>combina as alterações de forma organizada</strong>.</p>
+
+    <h3>2 · Histórico completo e recuperação (backup)</h3>
+    <p>O sistema registra <strong>o que mudou, quando e por quem</strong>. Se um bug aparece, a equipe
+       <strong>volta atrás</strong> e recupera o estado exato do passado — e ainda descobre a origem da falha
+       comparando versões.</p>
+
+    <h3>3 · Segurança para experimentar com <em>branches</em></h3>
+    <p>As ramificações (<span class="kw">branches</span>) são linhas paralelas de desenvolvimento. Elas
+       isolam um trabalho — nova funcionalidade, correção ou teste — sem risco de quebrar o código principal
+       que já está em produção.</p>
+
+    <h3>4 · Redundância contra falhas (distribuído)</h3>
+    <p>Em sistemas <strong>distribuídos</strong> como o Git, cada pessoa tem uma <strong>cópia completa do
+       repositório com todo o histórico</strong> na própria máquina. Não depende de rede constante e, se o
+       servidor central falhar, o projeto é restaurado a partir de qualquer cópia local.</p>
+
+    <h3>5 · Qualidade e agilidade</h3>
+    <p>Com a complexidade crescente dos softwares, controle de versão, automação e colaboração transparente
+       são o único caminho viável para <strong>garantir qualidade, agilidade e eficiência</strong> na entrega.</p>
+
+    <div class="grid c2">
+      <div class="card"><span class="ico">👥</span><h4>Colabora</h4><p>Várias pessoas no mesmo projeto, sem sobrescrever nada.</p></div>
+      <div class="card"><span class="ico">⏪</span><h4>Recupera</h4><p>Volte a qualquer versão anterior em segundos.</p></div>
+      <div class="card"><span class="ico">🌿</span><h4>Ramifica</h4><p>Teste ideias em branches isoladas com segurança.</p></div>
+      <div class="card"><span class="ico">💾</span><h4>Redundância</h4><p>Cópia completa em cada máquina — resistente a falhas.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 02 · GIT × GITHUB ============ -->
+  <section class="secao reveal" id="gitgithub">
+    <div class="marco"><span class="n">02</span><h2>Git &times; GitHub: qual a diferença?</h2></div>
+    <p>Eles andam lado a lado, mas são <strong>ferramentas distintas e complementares</strong>. A forma mais
+       simples de memorizar: <strong>o Git é a ferramenta; o GitHub é a plataforma</strong>.</p>
+
+    <figure class="fig">
+      <svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Git como cliente local e GitHub como servidor remoto">
+        <!-- máquina local -->
+        <rect x="40" y="50" width="270" height="160" rx="12" fill="#13263b" stroke="#f4a259" stroke-width="2"/>
+        <text x="175" y="82" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="16" fill="#f4a259" font-weight="700">GIT</text>
+        <text x="175" y="104" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#9db4cc">a ferramenta · roda no seu PC</text>
+        <g font-family="'JetBrains Mono',monospace" font-size="11" fill="#d7e2ee" text-anchor="middle">
+          <text x="175" y="140">💻 cópia local completa</text>
+          <text x="175" y="162">🔒 funciona offline</text>
+          <text x="175" y="184">⌨ linha de comando</text>
+        </g>
+        <text x="175" y="205" text-anchor="middle" font-size="10" font-family="'JetBrains Mono',monospace" fill="#6d87a3">papel: CLIENTE</text>
+
+        <!-- servidor remoto -->
+        <rect x="450" y="50" width="270" height="160" rx="12" fill="#13263b" stroke="#4cc9b0" stroke-width="2"/>
+        <text x="585" y="82" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="16" fill="#4cc9b0" font-weight="700">GITHUB</text>
+        <text x="585" y="104" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#9db4cc">a plataforma · na nuvem</text>
+        <g font-family="'JetBrains Mono',monospace" font-size="11" fill="#d7e2ee" text-anchor="middle">
+          <text x="585" y="140">☁ hospeda repositórios</text>
+          <text x="585" y="162">🔀 pull requests · issues</text>
+          <text x="585" y="184">⚙ GitHub Actions</text>
+        </g>
+        <text x="585" y="205" text-anchor="middle" font-size="10" font-family="'JetBrains Mono',monospace" fill="#6d87a3">papel: SERVIDOR</text>
+
+        <!-- setas push/pull -->
+        <g font-family="'JetBrains Mono',monospace" font-size="11">
+          <line x1="315" y1="115" x2="445" y2="115" stroke="#f4a259" stroke-width="2" marker-end="url(#ar)"/>
+          <text x="380" y="107" text-anchor="middle" fill="#f4a259">push ▶</text>
+          <line x1="445" y1="150" x2="315" y2="150" stroke="#4cc9b0" stroke-width="2" marker-end="url(#ar2)"/>
+          <text x="380" y="167" text-anchor="middle" fill="#4cc9b0">◀ pull</text>
+        </g>
+        <defs>
+          <marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#f4a259"/></marker>
+          <marker id="ar2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4cc9b0"/></marker>
+        </defs>
+      </svg>
+      <figcaption>Fig. 2 — O Git vive na sua máquina (cliente); o GitHub hospeda tudo na nuvem (servidor).</figcaption>
+    </figure>
+
+    <table class="tabela">
+      <thead><tr><th>Aspecto</th><th>Git</th><th>GitHub</th></tr></thead>
+      <tbody>
+        <tr><td>O que é</td><td>Software de controle de versão distribuído, de código aberto</td><td>Serviço online que hospeda repositórios Git</td></tr>
+        <tr><td>Onde roda</td><td>Localmente, no seu computador</td><td>Na nuvem</td></tr>
+        <tr><td>Função</td><td>Rastrear o histórico e tirar "fotos" (commits)</td><td>Centralizar, compartilhar e colaborar</td></tr>
+        <tr><td>Recursos extras</td><td>Branches, commits, log — via terminal</td><td>Pull requests, issues, Actions, portfólio</td></tr>
+        <tr><td>Papel</td><td>Cliente local</td><td>Servidor remoto</td></tr>
+      </tbody>
+    </table>
+
+    <div class="nota">
+      <span class="b">💡</span>
+      <p><strong>Resumo da relação:</strong> você pode usar o Git sozinho, offline, sem nunca abrir o GitHub.
+         Mas quando quer colaborar ou publicar seu código, usa o <em>git push</em> para enviar seus arquivos e
+         histórico para um repositório hospedado no GitHub.</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 · CONTA E CONFIGURAÇÃO ============ -->
+  <section class="secao reveal" id="conta">
+    <div class="marco"><span class="n">03</span><h2>Criando a conta e configurando o Git</h2></div>
+
+    <h3>1 · Criando a conta no GitHub</h3>
+    <ol class="passos">
+      <li><b>Acesse o site oficial:</b> entre em <a href="https://github.com" target="_blank" rel="noopener">github.com</a>.</li>
+      <li><b>Inicie a inscrição:</b> clique em <em>Sign up</em>, no canto superior direito.</li>
+      <li><b>Preencha os dados:</b> e-mail, uma senha segura e um nome de usuário (<span class="kw">username</span>).</li>
+      <li><b>Verificação:</b> resolva o CAPTCHA quando solicitado.</li>
+      <li><b>Escolha do plano:</b> selecione o <em>Free</em> — repositórios ilimitados para uso pessoal e colaborativo.</li>
+      <li><b>Confirme o e-mail:</b> abra sua caixa de entrada e ative a conta.</li>
+    </ol>
+
+    <h3>2 · Configurando o Git no seu computador</h3>
+    <p>Depois de criar a conta, identifique suas alterações locais para que o Git saiba quem fez cada commit.
+       Abra o terminal (Linux/macOS) ou o <strong>Git Bash</strong> (Windows) e rode:</p>
+
+    <div class="term">
+      <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>bash · configuração global</span></div>
+<pre><span class="cmd">git config <span class="fl">--global</span> user.name <span class="hl">"Seu Nome de Usuário"</span></span>
+<span class="cmd">git config <span class="fl">--global</span> user.email <span class="hl">"seu-email@exemplo.com"</span></span>
+<span class="cm"># use o MESMO e-mail cadastrado na sua conta do GitHub</span></pre>
+    </div>
+
+    <h3>3 · Autenticação para o <em>git push</em></h3>
+    <p>O GitHub <strong>não aceita senhas tradicionais</strong> na linha de comando. Configure uma das opções
+       seguras abaixo:</p>
+    <div class="grid c2">
+      <div class="card"><span class="ico">🔑</span><h4>Personal Access Token (PAT)</h4>
+        <p>Gerado em <span class="kw">Settings › Developer Settings › Personal Access Tokens</span>. Substitui a senha ao rodar <span class="kw">git push</span>.</p></div>
+      <div class="card"><span class="ico">🔐</span><h4>Chave SSH</h4>
+        <p>Cadastre uma chave SSH na conta para autenticar sem digitar credenciais toda vez.</p></div>
+    </div>
+
+    <div class="nota">
+      <span class="b">✅</span>
+      <p>Com a <strong>conta criada</strong>, o <strong>Git configurado</strong> e a <strong>chave/token
+         definida</strong>, sua máquina está pronta para <em>git init</em>, <em>git add</em>,
+         <em>git commit</em> e <em>git push</em>.</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 · REPOSITÓRIO ============ -->
+  <section class="secao reveal" id="repo">
+    <div class="marco"><span class="n">04</span><h2>Repositório e o primeiro projeto</h2></div>
+    <p>Um <strong>repositório</strong> (o <span class="kw">repo</span>) é uma pasta especial que guarda todos
+       os arquivos do projeto <strong>mais o histórico completo</strong> de alterações. Como o Git é
+       distribuído, você tem uma <strong>cópia idêntica de tudo</strong> na sua máquina local.</p>
+
+    <figure class="fig">
+      <svg viewBox="0 0 760 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Estrutura de um repositório com a pasta .git">
+        <rect x="60" y="40" width="640" height="130" rx="12" fill="#0c1a28" stroke="#23405f"/>
+        <text x="80" y="68" font-family="'JetBrains Mono',monospace" font-size="13" fill="#f5f1e8">📁 meu-projeto/</text>
+        <g font-family="'JetBrains Mono',monospace" font-size="12" fill="#9db4cc">
+          <text x="110" y="95">📄 index.html</text>
+          <text x="110" y="118">📄 estilo.css</text>
+          <text x="110" y="141">📄 README.md</text>
+        </g>
+        <rect x="380" y="78" width="290" height="72" rx="8" fill="#13263b" stroke="#f4a259" stroke-dasharray="4 3"/>
+        <text x="400" y="102" font-family="'JetBrains Mono',monospace" font-size="12" fill="#f4a259">📂 .git/  ← pasta oculta</text>
+        <text x="400" y="124" font-family="Inter,sans-serif" font-size="11" fill="#d7e2ee">o "cérebro": commits, branches,</text>
+        <text x="400" y="140" font-family="Inter,sans-serif" font-size="11" fill="#d7e2ee">tags e configurações do projeto</text>
+      </svg>
+      <figcaption>Fig. 3 — A pasta oculta <span class="kw">.git</span> é criada na raiz e monitora tudo.</figcaption>
+    </figure>
+
+    <h3>Método 1 · Criar do zero (<span class="kw">git init</span>)</h3>
+    <div class="term">
+      <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>bash · novo projeto</span></div>
+<pre><span class="cmd">cd caminho/da/sua-pasta</span>
+<span class="cmd">git init</span>
+<span class="out">Initialized empty Git repository in .../.git/</span>
+<span class="cm"># dica: git init nome-do-projeto cria a pasta e inicializa de uma vez</span></pre>
+    </div>
+    <p>A partir daí, a pasta <span class="kw">.git</span> é criada e o Git passa a monitorar qualquer
+       modificação de arquivos naquele diretório.</p>
+
+    <h3>Método 2 · Clonar um projeto existente (<span class="kw">git clone</span>)</h3>
+    <div class="term">
+      <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>bash · baixar da nuvem</span></div>
+<pre><span class="cmd">git clone <span class="hl">https://github.com/usuario/projeto.git</span></span>
+<span class="out">Cloning into 'projeto'...</span>
+<span class="cm"># baixa TODOS os arquivos + TODO o histórico de uma vez</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 05 · FLUXO / TRÊS ÁRVORES ============ -->
+  <section class="secao reveal" id="fluxo">
+    <div class="marco"><span class="n">05</span><h2>O fluxo de trabalho: as Três Árvores</h2></div>
+    <p>Para registrar versões, seu código passa por um ciclo entre as três "áreas" do Git — as
+       <strong>Three Trees</strong>:</p>
+
+    <figure class="fig">
+      <svg viewBox="0 0 760 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="As três árvores do Git">
+        <!-- três caixas -->
+        <g>
+          <rect x="30" y="60" width="200" height="120" rx="12" fill="#13263b" stroke="#6fb1e0" stroke-width="2"/>
+          <text x="130" y="90" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="14" fill="#6fb1e0" font-weight="600">Working Directory</text>
+          <text x="130" y="112" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#9db4cc">Diretório de Trabalho</text>
+          <text x="130" y="146" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#d7e2ee">onde você cria e</text>
+          <text x="130" y="162" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#d7e2ee">edita os arquivos</text>
+
+          <rect x="280" y="60" width="200" height="120" rx="12" fill="#13263b" stroke="#f4a259" stroke-width="2"/>
+          <text x="380" y="90" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="14" fill="#f4a259" font-weight="600">Staging Area</text>
+          <text x="380" y="112" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#9db4cc">Área de Preparação · Index</text>
+          <text x="380" y="146" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#d7e2ee">prepara o que entra</text>
+          <text x="380" y="162" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#d7e2ee">no próximo commit</text>
+
+          <rect x="530" y="60" width="200" height="120" rx="12" fill="#13263b" stroke="#4cc9b0" stroke-width="2"/>
+          <text x="630" y="90" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="14" fill="#4cc9b0" font-weight="600">HEAD</text>
+          <text x="630" y="112" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#9db4cc">Repositório · Commit</text>
+          <text x="630" y="146" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#d7e2ee">o último registro</text>
+          <text x="630" y="162" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#d7e2ee">de versão oficial</text>
+        </g>
+        <!-- setas com comandos -->
+        <g font-family="'JetBrains Mono',monospace" font-size="12">
+          <line x1="230" y1="120" x2="278" y2="120" stroke="#f4a259" stroke-width="2" marker-end="url(#a3)"/>
+          <text x="254" y="46" text-anchor="middle" fill="#f4a259">git add</text>
+          <line x1="480" y1="120" x2="528" y2="120" stroke="#4cc9b0" stroke-width="2" marker-end="url(#a4)"/>
+          <text x="504" y="46" text-anchor="middle" fill="#4cc9b0">git commit</text>
+        </g>
+        <text x="380" y="215" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#6d87a3">git status → git add → git commit → git log</text>
+        <defs>
+          <marker id="a3" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#f4a259"/></marker>
+          <marker id="a4" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#4cc9b0"/></marker>
+        </defs>
+      </svg>
+      <figcaption>Fig. 4 — <span class="kw">add</span> move alterações para a preparação; <span class="kw">commit</span> as consolida no histórico.</figcaption>
+    </figure>
+
+    <h3>O ciclo prático, passo a passo</h3>
+    <ol class="passos">
+      <li><b>Verifique o estado:</b> veja o que mudou e ainda não foi salvo.
+        <div class="term"><div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>passo 1</span></div>
+<pre><span class="cmd">git status</span></pre></div></li>
+      <li><b>Adicione à preparação:</b> diga ao Git o que entra no próximo commit.
+        <div class="term"><div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>passo 2</span></div>
+<pre><span class="cmd">git add README.md</span>   <span class="cm"># um arquivo específico</span>
+<span class="cmd">git add <span class="fl">.</span></span>           <span class="cm"># todas as modificações da pasta</span></pre></div></li>
+      <li><b>Salve a versão (commit):</b> uma "foto" do código com uma mensagem clara.
+        <div class="term"><div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>passo 3</span></div>
+<pre><span class="cmd">git commit <span class="fl">-m</span> <span class="hl">"Cria o arquivo de documentação README"</span></span></pre></div></li>
+      <li><b>Acompanhe o progresso:</b> veja a linha do tempo dos salvamentos.
+        <div class="term"><div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>passo 4</span></div>
+<pre><span class="cmd">git log</span></pre></div></li>
+    </ol>
+  </section>
+
+  <!-- ============ 06 · CONECTAR AO GITHUB ============ -->
+  <section class="secao reveal" id="nuvem">
+    <div class="marco"><span class="n">06</span><h2>Conectando o repositório local ao GitHub</h2></div>
+    <p>Para enviar seu repositório local à nuvem e deixá-lo acessível no GitHub, siga as etapas finais:</p>
+
+    <ol class="passos">
+      <li><b>Crie o repositório remoto:</b> no GitHub, clique em <em>New</em>, dê um nome e confirme.</li>
+      <li><b>Copie a URL</b> do repositório remoto recém-criado.</li>
+      <li><b>Vincule os dois repositórios</b> no terminal local.</li>
+      <li><b>Defina a ramificação principal</b> como <span class="kw">main</span>.</li>
+      <li><b>Envie o código</b> local para a nuvem.</li>
+    </ol>
+
+    <div class="term">
+      <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>bash · sincronizar com o GitHub</span></div>
+<pre><span class="cmd">git remote add origin <span class="hl">https://github.com/seu-usuario/seu-projeto.git</span></span>
+<span class="cmd">git branch <span class="fl">-M</span> main</span>
+<span class="cmd">git push <span class="fl">-u</span> origin main</span>
+<span class="out">Enumerating objects... done.</span>
+<span class="out">Branch 'main' set up to track remote branch 'main' from 'origin'.</span></pre>
+    </div>
+
+    <div class="nota">
+      <span class="b">🚀</span>
+      <p><strong>Pronto!</strong> Seu repositório local está criado, ativo e <strong>sincronizado com o
+         GitHub</strong>. A partir daqui, todo novo commit pode ser enviado com um simples
+         <em>git push</em>.</p>
+    </div>
+
+    <figure class="fig">
+      <svg viewBox="0 0 760 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comandos essenciais em sequência">
+        <g font-family="'JetBrains Mono',monospace" font-size="12" text-anchor="middle">
+          <rect x="20" y="45" width="120" height="40" rx="8" fill="#13263b" stroke="#f4a259"/><text x="80" y="70" fill="#f4a259">git init</text>
+          <rect x="180" y="45" width="120" height="40" rx="8" fill="#13263b" stroke="#6fb1e0"/><text x="240" y="70" fill="#6fb1e0">git add .</text>
+          <rect x="340" y="45" width="120" height="40" rx="8" fill="#13263b" stroke="#f6bd60"/><text x="400" y="70" fill="#f6bd60">git commit</text>
+          <rect x="500" y="45" width="120" height="40" rx="8" fill="#13263b" stroke="#4cc9b0"/><text x="560" y="70" fill="#4cc9b0">git push</text>
+          <rect x="655" y="45" width="90" height="40" rx="8" fill="#4cc9b0"/><text x="700" y="70" fill="#0d1b2a" font-weight="700">☁ nuvem</text>
+          <g stroke="#23405f" stroke-width="2">
+            <line x1="140" y1="65" x2="178" y2="65"/><line x1="300" y1="65" x2="338" y2="65"/>
+            <line x1="460" y1="65" x2="498" y2="65"/><line x1="620" y1="65" x2="653" y2="65"/>
+          </g>
+        </g>
+      </svg>
+      <figcaption>Fig. 5 — O caminho completo, do zero à nuvem, em cinco comandos.</figcaption>
+    </figure>
+  </section>
+
+</main>
+
+<button id="topo" aria-label="Voltar ao topo">↑</button>
+
+<footer>
+  <p>Apostila gerada para a aula de <b>06/08/2026</b> · Controle de Versão, Git &amp; GitHub</p>
+  <p><a href="slides.html">📊 Ver slides</a> &nbsp;·&nbsp; <a href="animacao.html">🎬 Ver animação</a> &nbsp;·&nbsp; <a href="index.html">🏠 Início</a></p>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>

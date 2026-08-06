@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slides — Controle de Versão, Git & GitHub</title>
+<link rel="stylesheet" href="css/estilo.css">
+<style>
+  .deck { max-width: 960px; margin: 0 auto; padding: 20px 24px 80px; }
+  .viewer {
+    position: relative; background: #071019; border: 1px solid var(--line);
+    border-radius: 14px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,.4);
+  }
+  .viewer img { display: block; width: 100%; height: auto; }
+  .nav-row { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 20px; }
+  .nav-btn {
+    font-family: 'JetBrains Mono', monospace; font-size: .9rem; cursor: pointer;
+    background: var(--panel); color: var(--paper); border: 1px solid var(--line);
+    border-radius: 10px; padding: 12px 22px; transition: .2s;
+  }
+  .nav-btn:hover:not(:disabled) { border-color: var(--amber); color: var(--amber); }
+  .nav-btn:disabled { opacity: .35; cursor: default; }
+  .contador { font-family: 'JetBrains Mono', monospace; color: var(--muted); font-size: .9rem; min-width: 74px; text-align: center; }
+  .dots { display: flex; gap: 7px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+  .dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); cursor: pointer; transition: .2s; }
+  .dots i.cur { background: var(--amber); transform: scale(1.25); }
+  .baixar {
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 24px;
+    font-family: 'JetBrains Mono', monospace; font-size: .82rem; text-decoration: none;
+    background: var(--amber); color: var(--ink); font-weight: 700;
+    padding: 12px 22px; border-radius: 10px; transition: .2s;
+  }
+  .baixar:hover { background: var(--amber-2); transform: translateY(-2px); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+  <span class="titulo"><b>slides</b>/git-github.pptx</span>
+  <nav>
+    <a href="index.html">← Apostila</a>
+    <a href="animacao.html">Animação</a>
+    <a href="git.html">Publicar</a>
+  </nav>
+</header>
+
+<section class="hero" style="padding-bottom:6px">
+  <div class="eyebrow">Apresentação · 8 slides</div>
+  <h1 style="font-size:clamp(1.9rem,5vw,3rem)">Slides da <span class="grad">aula</span></h1>
+  <p class="sub">Navegue com as setas do teclado ou os botões. Baixe o arquivo <b>.pptx</b> para editar no PowerPoint.</p>
+</section>
+
+<div class="deck">
+  <div class="viewer">
+    <img id="slide" src="slides/slide-1.jpg" alt="Slide 1">
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn" id="prev">◀ Anterior</button>
+    <span class="contador" id="cont">1 / 8</span>
+    <button class="nav-btn" id="next">Próximo ▶</button>
+  </div>
+  <div class="dots" id="dots"></div>
+
+  <div style="text-align:center">
+    <a class="baixar" href="slides_git_github.pptx" download>⬇ Baixar .pptx</a>
+  </div>
+</div>
+
+<footer>
+  <p><a href="index.html">🏠 Apostila</a> &nbsp;·&nbsp; <a href="animacao.html">🎬 Animação</a> &nbsp;·&nbsp; <a href="git.html">🔧 Publicar no GitHub</a></p>
+</footer>
+
+<script>
+const TOTAL = 8;
+let atual = 1;
+const img = document.getElementById('slide');
+const cont = document.getElementById('cont');
+const dots = document.getElementById('dots');
+const prev = document.getElementById('prev');
+const next = document.getElementById('next');
+
+for (let i = 1; i <= TOTAL; i++) {
+  const d = document.createElement('i');
+  d.addEventListener('click', () => ir(i));
+  dots.appendChild(d);
+}
+
+function render() {
+  img.src = `slides/slide-${atual}.jpg`;
+  img.alt = `Slide ${atual}`;
+  cont.textContent = `${atual} / ${TOTAL}`;
+  prev.disabled = atual === 1;
+  next.disabled = atual === TOTAL;
+  [...dots.children].forEach((d, i) => d.classList.toggle('cur', i + 1 === atual));
+}
+function ir(n) { atual = Math.min(TOTAL, Math.max(1, n)); render(); }
+
+prev.addEventListener('click', () => ir(atual - 1));
+next.addEventListener('click', () => ir(atual + 1));
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') ir(atual + 1);
+  if (e.key === 'ArrowLeft') ir(atual - 1);
+});
+render();
+</script>
+</body>
+</html>
