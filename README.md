@@ -4,6 +4,7 @@
 - [espinafr esteve aqui](https://github.com/espinafr/)
 
 ## Como fazer um Pull Request?
+(Siga esse tutorial depois de configurar seu email e nome no github... As instruções estão na apostila)
 1. Baixe o repositório usando o comando
 ```sh
 git clone https://github.com/marcelomacrinoanchieta/aulagit
